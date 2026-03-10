@@ -1,0 +1,101 @@
+[
+    {
+        "Id": "<vendor id>",
+        "Data": {
+            "Cmd": 0,
+            "Data": {
+                "Ack": 0
+            },
+            "RequestID": "1",
+            "MainboardID": "<serial#>",
+            "TimeStamp": 1771686126
+        },
+        "Topic": "sdcp/response/<serial#>"
+    },
+    {
+        "Attributes": {
+            "Name": "Centauri Carbon",
+            "MachineName": "Centauri Carbon",
+            "BrandName": "ELEGOO",
+            "ProtocolVersion": "V3.0.0",
+            "FirmwareVersion": "V1.1.29",
+            "XYZsize": "218.88x128.88x220",
+            "MainboardIP": "192.168.0.0",
+            "MainboardMAC": "e8:5c:5f:77:47:b2",
+            "MainboardID": "<serial#>",
+            "SDCPStatus": 0,
+            "MaximumCloudSDCPSercicesAllowed": 0,
+            "NumberOfCloudSDCPServicesConnected": 0,
+            "NumberOfVideoStreamConnected": 1,
+            "MaximumVideoStreamAllowed": 4,
+            "NetworkStatus": "wlan",
+            "UsbDiskStatus": 0,
+            "Capabilities": [
+                "FILE_TRANSFER",
+                "PRINT_CONTROL",
+                "VIDEO_STREAM"
+            ],
+            "SupportFileType": [
+                "gcode"
+            ],
+            "DevicesStatus": {
+                "SgStatus": 1,
+                "ZMotorStatus": 1,
+                "XMotorStatus": 1,
+                "YMotorStatus": 1
+            },
+            "CameraStatus": 1,
+            "RemainingMemory": 6524989440,
+            "TLPNoCapPos": 0,
+            "TLPStartCapPos": 0,
+            "TLPInterLayers": 0
+        },
+        "MainboardID": "<serial#>",
+        "TimeStamp": 1771686145,
+        "Topic": "sdcp/attributes/<serial#>"
+    },
+    {
+        "Status": {
+            "CurrentStatus": [
+                0
+            ],
+            "TimeLapseStatus": 0,
+            "PlatFormType": 0,
+            "TempOfHotbed": 59.55805446106124,
+            "TempOfNozzle": 220.2960522521225,
+            "TempOfBox": 31.21578541881348,
+            "TempTargetHotbed": 0,
+            "TempTargetNozzle": 0,
+            "TempTargetBox": 0,
+            "CurrenCoord": "202.00,264.50,99.52",
+            "CurrentFanSpeed": {
+                "ModelFan": 0,
+                "AuxiliaryFan": 0,
+                "BoxFan": 0
+            },
+            "ZOffset": 0.02,
+            "LightStatus": {
+                "SecondLight": 1,
+                "RgbLight": [
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "PrintInfo": {
+                "Status": 9,
+                "CurrentLayer": 50,
+                "TotalLayer": 50,
+                "CurrentTicks": 272.81738854700051,
+                "TotalTicks": 273,
+                "Filename": "",
+                "TaskId": "",
+                "PrintSpeedPct": 100,
+                "Progress": 0
+            }
+        },
+        "MainboardID": "<serial#>",
+        "TimeStamp": 1771686637,
+        "Topic": "sdcp/status/<serial#>"
+    }
+]
