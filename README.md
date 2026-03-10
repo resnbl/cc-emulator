@@ -7,7 +7,7 @@ Yellow Display (CYD) programmed in MicroPython (both of these items are new to m
 I quickly realized that in order to test my device's code,
 I would need to keep my printer running and producing status messages.
 This seemed problematic, especially when I found that an error in my
-code could cause the CC to lock up hard and require and power-down and rest
+code could cause the CC to lock up hard and require a power-down and rest
 before starting up again.
 
 So instead I created this "emulator" (using the term quite loosely)
@@ -48,7 +48,7 @@ python3 cc_recorder.py <logfile> <ip-addr>
 `logfile` is where the messages are stored. Default = "cc-log.json".
 
 `ip-addr` is an optional specific printer's IP address to connect with.
-Useful when more than printer (or a printer and `cc_player`) is active
+Useful when more thanone printer (or a printer and `cc_player`) is active
 on the network.
 
 ### cc_player.py
