@@ -26,7 +26,7 @@ def get_disco_resp() -> dict:
             host_fqdn = socket.gethostname()
             addrs = socket.gethostbyname_ex(host_fqdn)[2]
             host_addr = addrs[0] if not addrs[0].startswith('127.') else addrs[1]
-            _disco_resp['Data']['Name'] = host_fqdn.replace('.local', '')
+            _disco_resp['Data']['Name'] = 'Centauri Carbon'     # host_fqdn.replace('.local', '')
             _disco_resp['Data']['MainboardIP'] = host_addr
         except OSError as e:
             print(e)

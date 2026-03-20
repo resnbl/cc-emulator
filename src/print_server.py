@@ -83,7 +83,7 @@ class PrintServer:
             self.next_status = json.dumps(rec)
             if self.verbose:
                 print(f'{self.now(rec["TimeStamp"])}: {blab}')
-            self.ready.notify_all()
+            self.ready.notify()
 
     async def print_model(self):
         self.file_prev_time = 0
@@ -108,4 +108,7 @@ class PrintServer:
                 await asyncio.sleep(delay_btwn_jobs)
                 await self.print_model()
         except asyncio.CancelledError:
-            print(f'Stopping Printer server - {self.job_counter} jobs completed')
+            async with self.ready:
+                self.next_status = None     # flag we're quitting
+                self.ready.notify()
+            print(f'Printer server cancelled - {self.job_counter} jobs completed')

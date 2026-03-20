@@ -39,6 +39,6 @@ async def run_server():
         # wait for an event that will never happen
         await asyncio.Event().wait()
     except asyncio.CancelledError:
-        print('Stopping Discovery server')
+        print('Discovery server cancelled')
     finally:
         transport.close()

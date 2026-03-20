@@ -32,15 +32,16 @@ class StatusServer:
     def __init__(self, ps: print_server.PrintServer):
         self.ps = ps
 
-    async def handler(self, websocket: ServerConnection):
-        async for message in websocket:
+    async def handler(self, conn: ServerConnection):
+        # wait for Status Request message from connector
+        async for message in conn:
             if req := sdcp.is_status_request(message):
-                print('Received status request from:', websocket.remote_address[0])
+                print('Received status request from:', conn.remote_address[0])
                 ack = sdcp.make_ack(req)
-                await websocket.send(json.dumps(ack))
+                await conn.send(json.dumps(ack))
                 break
             else:
-                await websocket.send('Who dat?')
+                await conn.send('Who dat?')
                 return  # end connection
 
         # Loop waiting for print server to produce new status records
@@ -48,28 +49,31 @@ class StatusServer:
             while True:
                 async with self.ps.ready:
                     await self.ps.ready.wait()
-                    await websocket.send(self.ps.next_status)
+                    if self.ps.next_status:
+                        await conn.send(self.ps.next_status)
+                    else:
+                        print('Status connection ended from PrintServer')
+                        return
         except websockets.ConnectionClosedError as cce:
-            print('Connection error:', websocket.remote_address[0])
+            print('Connection error:', conn.remote_address[0])
             print(cce)
         except websockets.ConnectionClosedOK:
-            print('Connection closed from:', websocket.remote_address[0])
+            print('Connection closed from:', conn.remote_address[0])
 
     async def serve_status(self):
         try:
-            async with serve(self.handler, SERVER_HOST, STATUS_PORT) as server:
-                await server.serve_forever()
-        except asyncio.CancelledError:
-            print('Stopping Websocket server')
+            server = await serve(self.handler, SERVER_HOST, STATUS_PORT)
+            await server.serve_forever()
 
+        except asyncio.CancelledError:
+            print('Status server cancelled')
 
 async def ainput(prompt='Press ENTER to quit...\n'):
     # co-routine to wait for ENTER from keyboard
     try:
         await asyncio.to_thread(input, prompt)
     except asyncio.CancelledError:
-        # print('input task cancelled')
-        raise
+        print('Input task cancelled')
 
 async def main(input_log: Path, speed: float = 1.0):
     ps = print_server.PrintServer(print_log=input_log, speed=speed, verbose=True)
@@ -82,18 +86,14 @@ async def main(input_log: Path, speed: float = 1.0):
         asyncio.create_task(ps.print_stuff(), name='Printer'),
         ], return_when=asyncio.FIRST_COMPLETED)
 
-    # for task in done:
-    #     print(task.get_name(), 'ended')
-    if pending:     # most likely True
-        # Cancel remaining tasks so they can clean up
-        for task in pending:
-            task.cancel()       # cancel them all
-        for task in pending:
-            try:
-                await task      # wait for their completions
-                # print(task.get_name(), 'ended')
-            except asyncio.CancelledError:
-                pass
+    for task in pending:
+        print('Cancelling task:', task.get_name())
+        try:
+            task.cancel()
+            await task      # wait for their completions
+            # print(task.get_name(), 'ended')
+        except asyncio.CancelledError:
+            pass
 
     print('All done!')
 
