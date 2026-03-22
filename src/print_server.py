@@ -48,11 +48,17 @@ class PrintServer:
     async def process_rec(self, rec: dict):
         # Status or Attributes record: delay before processing
         rec_time = rec['TimeStamp']
-        if self.file_prev_time > 0:
-            # delay until this record is reflected in printer status
-            delay_secs = (rec_time - self.file_prev_time) / self.speed
-            await asyncio.sleep(delay_secs)
-        self.file_prev_time = rec_time
+        if rec_time > 24*60*60:       # "old" format: full Unix timestamp
+            if self.file_prev_time == 0:    # first record in job
+                delay_secs = 0
+            else:
+                delay_secs = rec_time - self.file_prev_time
+            self.file_prev_time = rec_time
+        else:
+            delay_secs = rec_time   # "new" format: specified delay
+
+        # delay until this record is reflected in printer status
+        await asyncio.sleep(delay_secs / self.speed)
 
         async with self.ready:  # lock status until we've updated msg buffer
             blab = ''
@@ -101,7 +107,7 @@ class PrintServer:
         self.job_counter += 1
         print(f'Print job {self.job_counter} complete')
 
-    async def print_stuff(self, delay_btwn_jobs=10):
+    async def print_stuff(self, delay_btwn_jobs=5):
         # Our print service
         try:
             while True:

@@ -143,10 +143,16 @@ async def monitor_printer(printer: PrinterStatus, log):
             request = make_status_req(printer, request_number)
             # print('Sending', request)
             await ws.send(request)
+            prev_time = time.time()
+
             async for msg in ws:
                 msg_obj = json.loads(msg)
                 if 'Status' in msg_obj or 'Attributes' in msg_obj:  # filter out 'Ack' msgs
-                    log.log(msg)
+                    # set timestamp relative to previous message as debug aid
+                    curr_time = time.time()
+                    msg_obj['TimeStamp'] = int(curr_time - prev_time + 0.5)
+                    prev_time = curr_time
+                    log.log(json.dumps(msg_obj, separators=(',', ':')))     # compact output
 
         except json.JSONDecodeError:
             print(f"Response from {printer.mb_id} is invalid JSON")

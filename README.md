@@ -51,6 +51,13 @@ python3 cc_recorder.py <logfile> <ip-addr>
 Useful when more thanone printer (or a printer and `cc_player`) is active
 on the network.
 
+#### Update:
+
+`cc_recorder` has been updated to replace the original TimeStamp field (Unix epoch
+number of seconds since 1970-01-01) with the relative number of seconds
+since the previous message. This allows for easier manual editing of files
+to reduce the number (and time) of emulated records.
+
 ### cc_player.py
 
 This script is a Websocket server that a monitor program can connect to
@@ -79,3 +86,8 @@ python3 cc_player.py <logfile> <speed>
 `speed` is a rate multiplier for the delay between messages.
 0.5 is used for half-speed; 1.0 for normal speed (default) and 2.0 would be
 double-speed.
+
+#### Update:
+`cc_player` has been updated to handle the "record relative" TimeStamp fields
+produced by `cc_recorder`. (It will also handle the older "full timestamp"
+files as well.)
