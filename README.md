@@ -91,3 +91,20 @@ double-speed.
 `cc_player` has been updated to handle the "record relative" TimeStamp fields
 produced by `cc_recorder`. (It will also handle the older "full timestamp"
 files as well.)
+
+### status_changes.py
+
+This script will process a file created by `cc_recorder.py` and output a
+record whenever the "Machine" or "Print" status changes along with the number
+of seconds spent in that state. This allows one to get an overview of the
+printer's "state changes". (Without this, I never would have realized that the
+"Machine" status was changing while the "Print" status was staying in "IDLE".)
+
+```shell
+python3 status_changes.py <logfile> <outfile>
+```
+
+`logfile` is where the messages are stored. Default = "cc-log.json".
+
+`outfile` is where to store the output. Default = the `logfile` path with '.json'
+replaced by '.txt'.
