@@ -76,6 +76,7 @@ async def ainput(prompt='Press ENTER to quit...\n'):
         print('Input task cancelled')
 
 async def main(input_log: Path, speed: float = 1.0):
+    print('Playing back:', input_log)
     ps = print_server.PrintServer(print_log=input_log, speed=speed, verbose=True)
     ws = StatusServer(ps)
 
