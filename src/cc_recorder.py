@@ -180,6 +180,7 @@ async def main(log_path: Path, disco_addr: str):
         printers = scan_network(disco_addr)
         if printers:
             printer = printers[0]       # use the first one found (I only have 1!)
+            print(f'Recording from: {printer.name} ({printer.ip_addr}) to {log_path}')
 
             # Two tasks to allow console input to kill connection gracefully
             monitor = asyncio.create_task(monitor_printer(printer, log), name='monitor')
