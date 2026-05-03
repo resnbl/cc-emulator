@@ -57,8 +57,8 @@ class StatusServer:
         except websockets.ConnectionClosedError as cce:
             print('Connection error:', conn.remote_address[0])
             print(cce)
-        except websockets.ConnectionClosedOK:
-            print('Connection closed from:', conn.remote_address[0])
+        except websockets.ConnectionClosedOK as cco:
+            print('Connection closed:', conn.remote_address[0], cco)
 
     async def serve_status(self):
         try:
@@ -91,9 +91,15 @@ async def main(input_log: Path, speed: float = 1.0):
         print('Cancelling task:', task.get_name())
         try:
             task.cancel()
-            await task      # wait for their completions
+            # await task      # wait for their completions
             # print(task.get_name(), 'ended')
         except asyncio.CancelledError:
+            pass
+    for task in pending:
+        try:
+            print('Waiting on', task.get_name())
+            await task
+        except Exception:
             pass
 
     print('All done!')
